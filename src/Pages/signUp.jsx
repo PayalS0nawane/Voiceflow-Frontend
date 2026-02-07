@@ -17,18 +17,6 @@ const Signup = () => {
   const[name, setName] = useState("");
 
   const navigate = useNavigate();
-
-  // const handleEmailSignup = async (e) => {
-  //   e.preventDefault();
-  //   setError("");
-
-  //   try {
-  //     await createUserWithEmailAndPassword(auth, email, password);
-  //     navigate("/home");
-  //   } catch (err) {
-  //     setError(err.message);
-  //   }
-  // };
   const handleEmailSignup = async (e) => {
   e.preventDefault();
   setError("");

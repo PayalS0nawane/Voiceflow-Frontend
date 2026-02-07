@@ -213,32 +213,6 @@ const SpeechRecorder = () => {
 
         <ul className="space-y-3 max-h-64 overflow-y-auto">
           {history.map((item) => (
-          //  <li//thiz
-          //     key={item.id}
-          //     className="border rounded-lg p-3 text-sm bg-gray-50"
-          //   >
-          //     <p className="mb-2">{item.text}</p>
-
-          //     <div className="flex gap-4 text-xs text-blue-600">
-          //       <button
-          //         onClick={() => copyText(item.text)}
-          //         className="hover:underline"
-          //       >
-          //         Copy
-          //       </button>
-          //       <button
-          //         onClick={() =>
-          //           downloadText(
-          //             item.text,
-          //             `transcript-${item.id}.txt`
-          //           )
-          //         }
-          //         className="hover:underline"
-          //       >
-          //         Download
-          //       </button>
-          //     </div>
-          //   </li>//to this
               <li className="group relative rounded-xl border bg-white p-4 shadow-sm hover:shadow-md transition">
 
             <p className="text-sm text-gray-800 leading-relaxed">

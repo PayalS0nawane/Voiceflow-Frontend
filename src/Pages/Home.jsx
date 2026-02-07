@@ -61,9 +61,9 @@ const Home = () => {
         </button>
       </header>
 
-      <h1 className="text-xl font-semibold mb-4">
+      {/* <h1 className="text-xl font-semibold mb-4">
               Hey, {user?.displayName || "there"}
-            </h1>
+            </h1> */}
       {/* MAIN CONTENT */}
       <main className="p-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* LEFT: RECORDER */}
