@@ -8,10 +8,19 @@ const Landing = () => {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-white">
       {/* NAVBAR */}
       <nav className="flex justify-between items-center px-8 py-6">
-        <h1 className="text-2xl font-bold text-blue-600">
+        {/* <h1 className="text-2xl font-bold text-blue-600">
           VoiceFlow
-        </h1>
-
+        </h1> */}
+  <div className="flex items-center gap-2">
+  <img
+    src="/src/assets/STT_logo.png"
+    alt="VoiceFlow logo"
+    className="h-15 w-20"
+  />
+  <span className="text-xl font-bold text-blue-600">
+    VoiceFlow
+  </span>
+</div>
         <button
           onClick={() => navigate("/auth")}
           className="px-5 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
@@ -47,7 +56,7 @@ const Landing = () => {
         {/* ILLUSTRATION */}
         <div className="w-full md:w-1/2 flex justify-center">
           <img
-            src="https://illustrations.popsy.co/blue/speech-to-text.svg"
+            src="/src/assets/Landing_page.png"
             alt="Speech to Text Illustration"
             className="w-80 md:w-96"
           />
