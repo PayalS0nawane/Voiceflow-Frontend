@@ -11,26 +11,28 @@ const SpeechRecorder = () => {
 
   const mediaRecorderRef = useRef(null);
   const audioChunksRef = useRef([]);
+  const streamRef = useRef(null);
 
-    useEffect(() => {
-  const loadHistory = async () => {
-    try {
-      const data = await getTranscripts();
-      // console.log("HISTORY FROM API 👉", data);
-      setHistory(Array.isArray(data) ? data : []);
-    } catch (err) {
-      console.error("History error", err);
-    } finally {
-      setLoadingHistory(false);
-    }
-  };
-  loadHistory();
-}, []);
-
+  // 🔁 Load history
+  useEffect(() => {
+    const loadHistory = async () => {
+      try {
+        const data = await getTranscripts();
+        setHistory(Array.isArray(data) ? data : []);
+      } catch (err) {
+        console.error("History error", err);
+      } finally {
+        setLoadingHistory(false);
+      }
+    };
+    loadHistory();
+  }, []);
 
   // 🎤 RECORD
   const startRecording = async () => {
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    streamRef.current = stream;
+
     const mediaRecorder = new MediaRecorder(stream, {
       mimeType: "audio/webm;codecs=opus",
     });
@@ -42,6 +44,8 @@ const SpeechRecorder = () => {
     };
 
     mediaRecorder.onstop = async () => {
+      stream.getTracks().forEach((track) => track.stop()); // 🔑 stop mic
+
       const audioBlob = new Blob(audioChunksRef.current, {
         type: "audio/webm",
       });
@@ -88,15 +92,16 @@ const SpeechRecorder = () => {
     }
   };
 
-  //delete transcript
-  const handleDelete = async(id)=>{
-    try{
+  // 🗑️ DELETE
+  const handleDelete = async (id) => {
+    try {
       await deleteTranscript(id);
-      setHistory((prev)=> prev.filter((item)=>item.id !== id ));
-    }catch{
+      setHistory((prev) => prev.filter((item) => item.id !== id));
+    } catch {
       alert("Failed to delete transcript");
     }
-  }
+  };
+
   // 📋 COPY
   const copyText = async (content) => {
     if (!content) return;
@@ -127,7 +132,7 @@ const SpeechRecorder = () => {
           Convert Speech to Text
         </h2>
 
-        <div className="flex items-center gap-4">
+        <div className="flex flex-wrap items-center gap-4">
           <button
             onClick={listening ? stopRecording : startRecording}
             disabled={uploading}
@@ -140,7 +145,7 @@ const SpeechRecorder = () => {
             {listening ? "Stop Recording" : "Start Recording"}
           </button>
 
-          <label className="cursor-pointer px-3 py-1 rounded-md bg blue-100 text-blue-700 hover:bg-blue-200 transition text-xs font-medium">
+          <label className="cursor-pointer px-3 py-1 rounded-md bg-blue-100 text-blue-700 hover:bg-blue-200 transition text-xs font-medium">
             Upload audio
             <input
               type="file"
@@ -166,11 +171,10 @@ const SpeechRecorder = () => {
             </h3>
 
             {text && (
-              
               <div className="flex gap-3 text-sm">
                 <button
                   onClick={() => copyText(text)}
-                  className="px-3 py-1 rounded-md bg blue-100 text-blue-700 hover:bg-blue-200 transition text-xs font-medium"
+                  className="px-3 py-1 rounded-md bg-blue-100 text-blue-700 hover:bg-blue-200 transition text-xs font-medium"
                 >
                   {copied ? "Copied!" : "Copy"}
                 </button>
@@ -179,7 +183,7 @@ const SpeechRecorder = () => {
                   onClick={() =>
                     downloadText(text, "latest-transcript.txt")
                   }
-                  className="px-3 py-1 rounded-md bg blue-100 text-blue-700 hover:bg-blue-200 transition text-xs font-medium"
+                  className="px-3 py-1 rounded-md bg-blue-100 text-blue-700 hover:bg-blue-200 transition text-xs font-medium"
                 >
                   Download
                 </button>
@@ -200,41 +204,40 @@ const SpeechRecorder = () => {
         </h3>
 
         {loadingHistory && (
-          <p className="text-sm text-gray-400">
-            Loading history...
-          </p>
+          <p className="text-sm text-gray-400">Loading history...</p>
         )}
 
         {!loadingHistory && history.length === 0 && (
-          <p className="text-sm text-gray-500">
-            No transcripts yet
-          </p>
+          <p className="text-sm text-gray-500">No transcripts yet</p>
         )}
 
-        <ul className="space-y-3 max-h-64 overflow-y-auto">
+        <ul className="space-y-3 max-h-72 overflow-y-auto">
           {history.map((item) => (
-              <li className="group relative rounded-xl border bg-white p-4 shadow-sm hover:shadow-md transition">
-
-            <p className="text-sm text-gray-800 leading-relaxed">
+            <li
+              key={item.id}
+              className="group relative rounded-xl border bg-white p-4 shadow-sm hover:shadow-md transition"
+            >
+              <p className="text-sm text-gray-800 leading-relaxed">
                 {item.text}
-            </p>
+              </p>
 
-            <div className="mt-3 flex justify-between items-center">
-              <span className="text-xs text-gray-400">
-                {item.createdAt?.toDate
-                  ? item.createdAt.toDate().toLocaleString()
-                  : ""}
-              </span>
+              <div className="mt-3 flex justify-between items-center">
+                <span className="text-xs text-gray-400">
+                  {item.createdAt?.toDate
+                    ? item.createdAt.toDate().toLocaleString()
+                    : ""}
+                </span>
 
-              <button
-                onClick={() => handleDelete(item.id)}
-                className="text-red-500 text-xs opacity-0 group-hover:opacity-100 transition"
-              >
-                Delete
-              </button>
-            </div>
-            <div className="flex gap-4 text-xs text-blue-600">
-                          <button
+                <button
+                  onClick={() => handleDelete(item.id)}
+                  className="text-red-500 text-xs opacity-0 group-hover:opacity-100 transition"
+                >
+                  Delete
+                </button>
+              </div>
+
+              <div className="mt-2 flex gap-4 text-xs text-blue-600">
+                <button
                   onClick={() => copyText(item.text)}
                   className="hover:underline"
                 >
@@ -242,18 +245,14 @@ const SpeechRecorder = () => {
                 </button>
                 <button
                   onClick={() =>
-                    downloadText(
-                      item.text,
-                      `transcript-${item.id}.txt`
-                    )
+                    downloadText(item.text, `transcript-${item.id}.txt`)
                   }
                   className="hover:underline"
                 >
                   Download
                 </button>
               </div>
-
-              </li>
+            </li>
           ))}
         </ul>
       </div>

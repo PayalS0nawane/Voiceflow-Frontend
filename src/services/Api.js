@@ -1,6 +1,8 @@
-
 import { auth } from "../firebase";
 
+const BASE_URL = "https://voiceflow-backend-production.up.railway.app";
+
+// 🎤 Send audio
 export const sendAudio = async (audioBlob) => {
   const user = auth.currentUser;
   if (!user) throw new Error("Not authenticated");
@@ -10,7 +12,7 @@ export const sendAudio = async (audioBlob) => {
   const formData = new FormData();
   formData.append("audio", audioBlob);
 
-  const res = await fetch("http://localhost:5000/api/speech", {
+  const res = await fetch(`${BASE_URL}/api/speech`, {
     method: "POST",
     headers: {
       Authorization: `Bearer ${token}`,
@@ -21,14 +23,14 @@ export const sendAudio = async (audioBlob) => {
   return res.json();
 };
 
-
+// 📜 Get transcripts
 export const getTranscripts = async () => {
   const user = auth.currentUser;
   if (!user) return [];
 
   const token = await user.getIdToken();
 
-  const res = await fetch("http://localhost:5000/api/transcripts", {
+  const res = await fetch(`${BASE_URL}/api/transcripts`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -40,21 +42,20 @@ export const getTranscripts = async () => {
   }
 
   const data = await res.json();
-
-  // 🔑 ENSURE ARRAY
   return Array.isArray(data) ? data : [];
 };
 
-export const deleteTranscript = async(id) =>{
+// 🗑 Delete transcript
+export const deleteTranscript = async (id) => {
   const user = auth.currentUser;
+  if (!user) throw new Error("Not authenticated");
+
   const token = await user.getIdToken();
 
-  await 
-  fetch(`https://localhost:5000/api/transcript/${id}`,{
+  await fetch(`${BASE_URL}/api/transcripts/${id}`, {
     method: "DELETE",
-    headers:{
+    headers: {
       Authorization: `Bearer ${token}`,
     },
   });
-};  
-  
+};
