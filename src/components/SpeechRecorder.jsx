@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { sendAudio, getTranscripts, deleteTranscript } from "../services/api";
+import { sendAudio, getTranscripts, deleteTranscript } from "./services/api";
 
 const SpeechRecorder = () => {
   const [text, setText] = useState("");
