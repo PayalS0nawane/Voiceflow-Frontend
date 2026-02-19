@@ -59,3 +59,25 @@ export const deleteTranscript = async (id) => {
     },
   });
 };
+// export const getTranscripts = async () => {
+//   const user = auth.currentUser;
+//   console.log("USER:", user);
+
+//   if (!user) {
+//     console.log("NO USER FOUND");
+//     return [];
+//   }
+
+//   const token = await user.getIdToken();
+//   console.log("TOKEN:", token);
+
+//   const res = await fetch(`${BASE_URL}/api/transcripts`, {
+//     headers: {
+//       Authorization: `Bearer ${token}`,
+//     },
+//   });
+
+//   console.log("STATUS:", res.status);
+
+//   return res.json();
+// };
