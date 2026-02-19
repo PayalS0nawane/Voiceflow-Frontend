@@ -1,6 +1,6 @@
-
 import { useNavigate } from "react-router-dom";
-
+import heroImg from "../assets/Landing_page.png";
+import logo from "../assets/STT_logo.png";
 const Landing = () => {
   const navigate = useNavigate();
 
@@ -13,7 +13,7 @@ const Landing = () => {
         </h1> */}
   <div className="flex items-center gap-2">
   <img
-    src="/src/assets/STT_logo.png"
+    src={logo}
     alt="VoiceFlow logo"
     className="h-15 w-20"
   />
@@ -56,7 +56,7 @@ const Landing = () => {
         {/* ILLUSTRATION */}
         <div className="w-full md:w-1/2 flex justify-center">
           <img
-            src="/src/assets/Landing_page.png"
+            src={heroImg}
             alt="Speech to Text Illustration"
             className="w-80 md:w-96"
           />
